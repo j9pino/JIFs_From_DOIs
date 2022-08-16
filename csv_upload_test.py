@@ -96,6 +96,7 @@ def api_loop(dataframe):
     #deduplicate rows 
     #df_final = df_final.drop_duplicates()
     df_final_2 = df_final_2.drop_duplicates()
+    df_final_2 = df_final_2.reset_index(drop=True)
     
     #display final dataframe
     #st.dataframe(df_final)
