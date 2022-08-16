@@ -3,15 +3,18 @@ import pandas as pd
 import requests, json
 
 
-#WoS API headers
-headers = {'X-ApiKey': st.secrets['API_KEY'], 
+#Scopus API headers
+headers = {'X-ELS-APIKey': '54c78ce17ce2def9c3a0274f0ef28545', 
            'Accept': 'application/json'}
 
-#WoS API query 
-baseUrl = 'https://api.clarivate.com/apis/wos-starter/v1/documents?q=(DO='
+#Scopus API query 
+url = 'https://api.elsevier.com/content/abstract/doi/'
 
 #read in most recent JIF data
 IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs.csv?raw=true")
+IFs['ISSN'] = IFs['ISSN'].str.replace('-', '')
+IFs['eISSN'] = IFs['eISSN'].str.replace('-', '')
+#st.dataframe(IFs)
 #create empty lists to which we will append API-gathered data
 ISSN_data = []
 eISSN_data = []
@@ -28,33 +31,45 @@ def api_loop(dataframe):
     for i in range(len(df)):
         percent_complete = (i+1)/len(df)
         DOI = str(df.iloc[i]['DOIs'])
-        queryUrl = baseUrl + DOI + ')'  
-        r = requests.get(queryUrl, headers=headers)
+        queryURL = url + DOI
+        #st.write(queryURL)
+        r = requests.get(queryURL, headers=headers)
         rText = r.text
-        results = json.loads(rText) 
+        rJSON = json.loads(rText)
+        #st.write(rJSON)
+        #pprint.pprint(rJSON)
         try:
-            issn = results['hits'][0]['identifiers']['issn']
-        except:
-            issn = 'NA'
-        try:
-            eISSN = results['hits'][0]['identifiers']['eissn']
+            eISSN = rJSON['abstracts-retrieval-response']['item']['bibrecord']['head']['source']['issn'][0]['$']
         except:
             eISSN = 'NA'
-        ISSN_data.append([DOI,issn])
-        eISSN_data.append([DOI,eISSN])
+        try:
+            ISSN = rJSON['abstracts-retrieval-response']['item']['bibrecord']['head']['source']['issn'][1]['$']
+        except:
+            ISSN = 'NA'
+        try:
+            title = rJSON['abstracts-retrieval-response']['item']['bibrecord']['head']['source']['sourcetitle']
+        except:
+            title = ''
+        ISSN_data.append([DOI,ISSN,title])
+        eISSN_data.append([DOI,eISSN,title])
         my_bar.progress(percent_complete)
-
+    #st.write(ISSN_data)
+    #st.write(eISSN_data)
     #assign ISSN/eISSN lists to dataframes
-    ISSN_df = pd.DataFrame(ISSN_data, columns = ['DOI','ISSN'])
-    eISSN_df = pd.DataFrame(eISSN_data, columns = ['DOI','eISSN'])
+    ISSN_df = pd.DataFrame(ISSN_data, columns = ['DOI','ISSN','Journal Title'])
+    eISSN_df = pd.DataFrame(eISSN_data, columns = ['DOI','eISSN','Journal Title'])
+    #st.dataframe(ISSN_df)
+    #st.dataframe(eISSN_df)
     
     #merge (join) found data with JIF data
     ISSN_left_merged = pd.merge(ISSN_df, IFs, how = "left", on=['ISSN', 'ISSN'])
     eISSN_left_merged = pd.merge(eISSN_df, IFs, how = "left", on=['eISSN', 'eISSN'])
     
     #subset merged data to only show columns for DOI and JIF
-    ISSN_abbreviated = ISSN_left_merged[['DOI','Journal Impact Factor']]
-    eISSN_abbreviated = eISSN_left_merged[['DOI','Journal Impact Factor']]
+    ISSN_abbreviated = ISSN_left_merged[['DOI','Journal Impact Factor', 'Journal Title']]
+    eISSN_abbreviated = eISSN_left_merged[['DOI','Journal Impact Factor', 'Journal Title']]
+    #st.dataframe(ISSN_abbreviated)
+    #st.dataframe(eISSN_abbreviated)
     
     #stack ISSN/eISSN dataframes on top of each other and then...
     df_final = pd.concat([ISSN_abbreviated, eISSN_abbreviated])
@@ -87,7 +102,7 @@ if data is not None:
     df = pd.read_csv(data, header=None)
     df = df.rename(columns={0: 'DOIs'})
     #display dataframe of uploaded DOIs     
-    st.write(df)
+    st.dataframe(df)
     #introduce streamlit proress bar widget
     my_bar = st.progress(0.0)
     api_loop(df)
