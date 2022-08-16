@@ -51,7 +51,7 @@ def api_loop(dataframe):
         except:
             ISSN = 'NA'
         try:
-            title = rJSON['abstracts-retrieval-response']['item']['bibrecord']['head']['source']['sourcetitle']
+            title = rJSON['abstracts-retrieval-response']['coredata']['prism:publicationName']
         except:
             title = ''
         ISSN_data.append([DOI,ISSN,title])
