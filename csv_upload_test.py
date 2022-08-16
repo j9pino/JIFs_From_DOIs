@@ -6,7 +6,7 @@ import requests, json
 #Scopus API headers
 headers = {'X-ELS-APIKey': st.secrets['API_KEY'], 
            'Accept': 'application/json'}
-
+st.write("DB username:", st.secrets["API_KEY"])
 #Scopus API query 
 url = 'https://api.elsevier.com/content/abstract/doi/'
 
