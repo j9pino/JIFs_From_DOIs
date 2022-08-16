@@ -12,31 +12,20 @@ baseUrl = 'https://api.clarivate.com/apis/wos-starter/v1/documents?q=(DO='
 
 #read in most recent JIF data
 IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs.csv?raw=true")
-
+#st.write(IFs.head())
 #create empty lists to which we will append API-gathered data
 ISSN_data = []
 eISSN_data = []
+csv = None
 
-@st.cache
+@st.cache(suppress_st_warning=True)
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv(index=False).encode('utf-8')
 
-#streamlit upload button
-data = st.file_uploader("Upload a CSV of DOIs, one per line, no header column")
-
-#read in uploaded CSV and write to dataframe
-if data is not None:
-     df = pd.read_csv(data, header=None)
-     df = df.rename(columns={0: 'DOIs'})
-     #display dataframe of uploaded DOIs     
-     st.write(df)
-
-#introduce streamlit proress bar widget
-my_bar = st.progress(0.0)
-
 @st.cache(suppress_st_warning=True)
 def api_loop(dataframe):
+    global csv
     for i in range(len(df)):
         percent_complete = (i+1)/len(df)
         DOI = str(df.iloc[i]['DOIs'])
@@ -82,11 +71,26 @@ def api_loop(dataframe):
     
     csv = convert_df(df_final)
 
+@st.cache(suppress_st_warning=True)
+def show_download_button():
+    global csv
     st.download_button(
-         label="Download data as CSV",
-         data=csv,
-         file_name='DOIs_with_JIFs.csv',
-         mime='text/csv',
-     )
-    
-api_loop(df)
+        label="Download data as CSV",
+        data=csv,
+        file_name='DOIs_with_JIFs.csv',
+        mime='text/csv')
+
+#streamlit upload button
+data = st.file_uploader("Upload a CSV of DOIs, one per line, no header column")
+
+#read in uploaded CSV and write to dataframe
+if data is not None:
+    df = pd.read_csv(data, header=None)
+    df = df.rename(columns={0: 'DOIs'})
+    #display dataframe of uploaded DOIs     
+    st.write(df)
+    #introduce streamlit proress bar widget
+    my_bar = st.progress(0.0)
+    api_loop(df)
+    if csv is not None:
+        show_download_button()
