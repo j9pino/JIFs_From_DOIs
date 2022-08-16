@@ -12,7 +12,6 @@ baseUrl = 'https://api.clarivate.com/apis/wos-starter/v1/documents?q=(DO='
 
 #read in most recent JIF data
 IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs.csv?raw=true")
-#st.write(IFs.head())
 #create empty lists to which we will append API-gathered data
 ISSN_data = []
 eISSN_data = []
@@ -67,7 +66,7 @@ def api_loop(dataframe):
     df_final = df_final.drop_duplicates()
     
     #display final dataframe
-    st.write(df_final)
+    st.dataframe(df_final)
     
     csv = convert_df(df_final)
 
@@ -88,7 +87,7 @@ if data is not None:
     df = pd.read_csv(data, header=None)
     df = df.rename(columns={0: 'DOIs'})
     #display dataframe of uploaded DOIs     
-    st.write(df)
+    st.dataframe(df)
     #introduce streamlit proress bar widget
     my_bar = st.progress(0.0)
     api_loop(df)
