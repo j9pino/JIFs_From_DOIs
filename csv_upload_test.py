@@ -6,7 +6,7 @@ import requests, json
 #Scopus API headers
 headers = {'X-ELS-APIKey': st.secrets['API_KEY'], 
            'Accept': 'application/json'}
-st.write("DB username:", st.secrets["API_KEY"])
+st.write("API_KEY:", st.secrets['API_KEY'])
 #Scopus API query 
 url = 'https://api.elsevier.com/content/abstract/doi/'
 
@@ -36,7 +36,7 @@ def api_loop(dataframe):
         r = requests.get(queryURL, headers=headers)
         rText = r.text
         rJSON = json.loads(rText)
-        #st.write(rJSON)
+        st.write(rJSON)
         #pprint.pprint(rJSON)
         try:
             eISSN = rJSON['abstracts-retrieval-response']['item']['bibrecord']['head']['source']['issn'][0]['$']
