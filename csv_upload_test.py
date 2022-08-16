@@ -11,7 +11,7 @@ headers = {'X-ApiKey': '9fa83f4711a8d351f7713dc842ba74f180a92b29',
 baseUrl = 'https://api.clarivate.com/apis/wos-starter/v1/documents?q=(DO='
 
 #read in most recent JIF data
-IFs = pd.read_csv(r"C:\Users\9ex\OneDrive - Oak Ridge National Laboratory\Bibliometrics\Incites Publication Sources.csv")
+IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs.csv?token=GHSAT0AAAAAABXWJMDCLZQJWOHAK457224KYX3UJEQ")
 
 #create empty lists to which we will append API-gathered data
 ISSN_data = []
