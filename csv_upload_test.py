@@ -87,7 +87,7 @@ if data is not None:
     df = pd.read_csv(data, header=None)
     df = df.rename(columns={0: 'DOIs'})
     #display dataframe of uploaded DOIs     
-    st.dataframe(df)
+    st.write(df)
     #introduce streamlit proress bar widget
     my_bar = st.progress(0.0)
     api_loop(df)
