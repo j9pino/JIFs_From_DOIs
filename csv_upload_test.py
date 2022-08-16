@@ -14,7 +14,7 @@ url = 'https://api.elsevier.com/content/abstract/doi/'
 IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs.csv?raw=true")
 IFs['ISSN'] = IFs['ISSN'].str.replace('-', '')
 IFs['eISSN'] = IFs['eISSN'].str.replace('-', '')
-#st.dataframe(IFs)
+st.dataframe(IFs)
 #create empty lists to which we will append API-gathered data
 ISSN_data = []
 eISSN_data = []
@@ -32,7 +32,7 @@ def api_loop(dataframe):
         percent_complete = (i+1)/len(df)
         DOI = str(df.iloc[i]['DOIs'])
         queryURL = url + DOI
-        #st.write(queryURL)
+        st.write(queryURL)
         r = requests.get(queryURL, headers=headers)
         rText = r.text
         rJSON = json.loads(rText)
@@ -58,8 +58,8 @@ def api_loop(dataframe):
     #assign ISSN/eISSN lists to dataframes
     ISSN_df = pd.DataFrame(ISSN_data, columns = ['DOI','ISSN','Journal Title'])
     eISSN_df = pd.DataFrame(eISSN_data, columns = ['DOI','eISSN','Journal Title'])
-    #st.dataframe(ISSN_df)
-    #st.dataframe(eISSN_df)
+    st.dataframe(ISSN_df)
+    st.dataframe(eISSN_df)
     
     #merge (join) found data with JIF data
     ISSN_left_merged = pd.merge(ISSN_df, IFs, how = "left", on=['ISSN', 'ISSN'])
@@ -68,8 +68,8 @@ def api_loop(dataframe):
     #subset merged data to only show columns for DOI and JIF
     ISSN_abbreviated = ISSN_left_merged[['DOI','Journal Impact Factor', 'Journal Title']]
     eISSN_abbreviated = eISSN_left_merged[['DOI','Journal Impact Factor', 'Journal Title']]
-    #st.dataframe(ISSN_abbreviated)
-    #st.dataframe(eISSN_abbreviated)
+    st.dataframe(ISSN_abbreviated)
+    st.dataframe(eISSN_abbreviated)
     
     #stack ISSN/eISSN dataframes on top of each other and then...
     df_final = pd.concat([ISSN_abbreviated, eISSN_abbreviated])
