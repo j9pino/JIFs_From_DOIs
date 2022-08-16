@@ -4,7 +4,7 @@ import requests, json
 
 
 #WoS API headers
-headers = {'X-ApiKey': '9fa83f4711a8d351f7713dc842ba74f180a92b29', 
+headers = {'X-ApiKey': st.secrets['API_KEY'], 
            'Accept': 'application/json'}
 
 #WoS API query 
