@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 import requests, json
 
-
 #Scopus API headers
 headers = {'X-ELS-APIKey': st.secrets['API_KEY'], 
            'Accept': 'application/json'}
+
 #Scopus API query 
 url = 'https://api.elsevier.com/content/abstract/doi/'
 
@@ -18,11 +18,13 @@ IFs['eISSN'] = IFs['eISSN'].str.replace('-', '')
 identifiers = []
 csv = None
 
+#convert dataframe to csv for exporting purposes
 @st.cache(suppress_st_warning=True)
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv(index=False).encode('utf-8')
 
+#main function that uses list of DOIs with API call
 @st.cache(suppress_st_warning=True)
 def api_loop(dataframe):
     global csv
@@ -36,23 +38,23 @@ def api_loop(dataframe):
         try:
             ids = rJSON['abstracts-retrieval-response']['coredata']['prism:issn']
         except:
-            ids = ''
+            ids = 'No ISSN(s) Found'
         try:
             eISSN = ids.split(' ')[0]
         except:
-            eISSN = ''
+            eISSN = 'No eISSN Found'
         try:
             ISSN = ids.split(' ')[1]
         except:
-            ISSN = ''
+            ISSN = 'No ISSn Found'
         try:
             title = rJSON['abstracts-retrieval-response']['coredata']['prism:publicationName']
         except:
-            title = ''
+            title = 'No Title Found'
         try:
             times_cited = rJSON['abstracts-retrieval-response']['coredata']['citedby-count']
         except:
-            times_cited = ''
+            times_cited = 'No Citations Found'
         identifiers.append([DOI,ISSN,title,times_cited])
         identifiers.append([DOI,eISSN,title,times_cited])
         my_bar.progress(percent_complete)
@@ -68,15 +70,18 @@ def api_loop(dataframe):
     
     #stack ISSN/eISSN dataframes on top of each other and then...
     df_final_2 = pd.concat([identifiers_abbreviated_1, identifiers_abbreviated_2])
-    #drop rows where JIF is empty
-    df_final_2 = df_final_2[df_final_2['Journal Impact Factor'].notna()]
-    #deduplicate rows 
-    df_final_2 = df_final_2.drop_duplicates()
+    
     df_final_2 = df_final_2.reset_index(drop=True)
     
     #display final dataframe
-    st.dataframe(df_final_2)
+    df_final_2 = df_final_2.drop_duplicates()
+    test_df = df_final_2.sort_values('Journal Impact Factor', ascending=False)
+    test_df = test_df[~test_df.duplicated('DOI')]
+    test_df = test_df.reset_index(drop=True)
+
+    st.dataframe(test_df)
     
+    #convert df to csv
     csv = convert_df(df_final_2)
 
 @st.cache(suppress_st_warning=True)
