@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests, json
 import time
-
+st.experimental_memo.clear()
 #Scopus API headers
 headers = {'X-ELS-APIKey': st.secrets['API_KEY'], 
            'Accept': 'application/json'}
@@ -96,7 +96,7 @@ def show_download_button():
         data=csv,
         file_name='DOIs_with_JIFs.csv',
         mime='text/csv')
-        st.experimental_memo.clear()
+        
 
 #streamlit upload button
 data = st.file_uploader("Upload a CSV of DOIs, one per line, no header column")
