@@ -4,7 +4,8 @@ import requests, json
 import time
 
 st.experimental_memo.clear()
-st.set_page_config(page_title="Find Journal Impact Factor for a list of Publications")
+st.set_page_config(page_title="JIFs from DOIs")
+st.title("JIFS from DOIs")
 
 #Scopus API headers
 headers = {'X-ELS-APIKey': st.secrets['API_KEY'], 
@@ -102,7 +103,9 @@ def show_download_button():
         
 
 #streamlit upload button
-data = st.file_uploader("Upload a CSV of DOIs, one per line, no header column")
+data = st.file_uploader("Upload a CSV of DOIs, one per line, no header column",
+                       key = '1',
+                       help='Make sure your upload file is a CSV and only contains DOIs, one per line, with no header')
 
 #read in uploaded CSV and write to dataframe
 if data is not None:
@@ -114,4 +117,5 @@ if data is not None:
     my_bar = st.progress(0.0)
     api_loop(df)
     if csv is not None:
+        st.success('Your Download is Ready!')
         show_download_button()
