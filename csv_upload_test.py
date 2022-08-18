@@ -82,7 +82,7 @@ def api_loop(dataframe):
     st.dataframe(test_df)
     
     #convert df to csv
-    csv = convert_df(df_final_2)
+    csv = convert_df(test_df)
 
 @st.cache(suppress_st_warning=True)
 def show_download_button():
