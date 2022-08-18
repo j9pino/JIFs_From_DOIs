@@ -117,5 +117,6 @@ if data is not None:
     my_bar = st.progress(0.0)
     api_loop(df)
     if csv is not None:
+        st.balloons()              
         st.success('Your Download is Ready!')
         show_download_button()
