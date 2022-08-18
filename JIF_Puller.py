@@ -4,12 +4,8 @@ import requests, json
 import time
 
 #Scopus API headers
-headers = {'X-ELS-APIKey': '54c78ce17ce2def9c3a0274f0ef28545', 
+headers = {'X-ELS-APIKey': st.secrets['API_KEY'], 
            'Accept': 'application/json'}
-
-#Scopus API headers
-#headers = {'X-ELS-APIKey': st.secrets['API_KEY'], 
-#           'Accept': 'application/json'}
 
 #Scopus API query 
 url = 'https://api.elsevier.com/content/abstract/doi/'
