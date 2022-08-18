@@ -2,7 +2,10 @@ import streamlit as st
 import pandas as pd
 import requests, json
 import time
+
 st.experimental_memo.clear()
+st.set_page_config(page_title="Find Journal Impact Factor for a list of Publications")
+
 #Scopus API headers
 headers = {'X-ELS-APIKey': st.secrets['API_KEY'], 
            'Accept': 'application/json'}
