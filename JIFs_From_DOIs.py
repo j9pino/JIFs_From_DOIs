@@ -58,7 +58,7 @@ def api_loop(dataframe):
         identifiers.append([DOI,ISSN,title,times_cited])
         identifiers.append([DOI,eISSN,title,times_cited])
         my_bar.progress(percent_complete)
-        #time.sleep(0.05)
+        time.sleep(0.05)
     identifiers_df = pd.DataFrame(identifiers, columns = ['DOI','Identifier','Journal Title','Times Cited'])
     
     #merge (join) found data with JIF data
