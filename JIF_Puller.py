@@ -20,13 +20,13 @@ identifiers = []
 csv = None
 
 #convert dataframe to csv for exporting purposes
-@st.cache(suppress_st_warning=True)
+@st.experimental_memo(suppress_st_warning=True)
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv(index=False).encode('utf-8')
 
 #main function that uses list of DOIs with API call
-@st.cache(suppress_st_warning=True)
+@st.experimental_memo(suppress_st_warning=True)
 def api_loop(dataframe):
     global csv
     for i in range(len(df)):
@@ -88,7 +88,7 @@ def api_loop(dataframe):
     #convert df to csv
     csv = convert_df(test_df)
 
-@st.cache(suppress_st_warning=True)
+@st.experimental_memo(suppress_st_warning=True)
 def show_download_button():
     global csv
     st.download_button(
@@ -96,6 +96,7 @@ def show_download_button():
         data=csv,
         file_name='DOIs_with_JIFs.csv',
         mime='text/csv')
+        st.experimental_memo.clear()
 
 #streamlit upload button
 data = st.file_uploader("Upload a CSV of DOIs, one per line, no header column")
