@@ -58,6 +58,7 @@ def api_loop(dataframe):
         identifiers.append([DOI,ISSN,title,times_cited])
         identifiers.append([DOI,eISSN,title,times_cited])
         my_bar.progress(percent_complete)
+        time.sleep(0.05)
     identifiers_df = pd.DataFrame(identifiers, columns = ['DOI','Identifier','Journal Title','Times Cited'])
     
     #merge (join) found data with JIF data
@@ -77,6 +78,8 @@ def api_loop(dataframe):
     df_final_2 = df_final_2.drop_duplicates()
     test_df = df_final_2.sort_values('Journal Impact Factor', ascending=False)
     test_df = test_df[~test_df.duplicated('DOI')]
+    test_df['Journal Impact Factor'] = test_df['Journal Impact Factor'].astype(str)
+    test_df['Journal Impact Factor'] = test_df['Journal Impact Factor'].replace('nan', 'No JIF Found')
     test_df = test_df.reset_index(drop=True)
 
     st.dataframe(test_df)
