@@ -11,7 +11,7 @@ headers = {'X-ELS-APIKey': st.secrets['API_KEY'],
 #Scopus API query 
 url = 'https://api.elsevier.com/content/abstract/doi/'
 #read in most recent JIF data
-IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs.csv?raw=true")
+IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs_2022-08-26.csv?raw=true")
 IFs['ISSN'] = IFs['ISSN'].str.replace('-', '')
 IFs['eISSN'] = IFs['eISSN'].str.replace('-', '')
 #create empty lists to which we will append API-gathered data
