@@ -8,8 +8,8 @@ CR_API_MAILTO = {"Mailto": "martindalete@ornl.gov"}
 headers = {'Mailto':'martindalete@ornl.gov'}
 
 #read in most recent JIF data
-#IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs.csv?raw=true")
-IFs = pd.read_csv(r"C:\Users\9ex\OneDrive - Oak Ridge National Laboratory\streamlit\JIF\JIFs_2022-08-26.csv")
+IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs.csv?raw=true")
+#IFs = pd.read_csv(r"C:\Users\9ex\OneDrive - Oak Ridge National Laboratory\streamlit\JIF\JIFs_2022-08-26.csv")
 #IFs['ISSN'] = IFs['ISSN'].str.replace('-', '')
 #IFs['eISSN'] = IFs['eISSN'].str.replace('-', '')
 
