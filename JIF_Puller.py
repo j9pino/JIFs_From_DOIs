@@ -109,8 +109,8 @@ def crossref_loop(dataframe):
     
     #display final dataframe
     df_final_2 = df_final_2.drop_duplicates()
-    test_df = df_final_2.sort_values('Journal Impact Factor', ascending=False)
-    test_df = test_df[~test_df.duplicated('DOI')]
+    #test_df = df_final_2.sort_values('Journal Impact Factor', ascending=False)
+    #test_df = test_df[~test_df.duplicated('DOI')]
     test_df['Journal Impact Factor'] = test_df['Journal Impact Factor'].astype(str)
     test_df['Journal Impact Factor'] = test_df['Journal Impact Factor'].replace('nan', 'No JIF Found')
     test_df = test_df.reset_index(drop=True)
