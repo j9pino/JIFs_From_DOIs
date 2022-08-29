@@ -2,6 +2,7 @@ import crossref_commons.retrieval
 import streamlit as st
 import pandas as pd
 from habanero import counts
+import time
 
 CR_API_MAILTO = {"Mailto": "martindalete@ornl.gov"}
 
@@ -91,6 +92,7 @@ def crossref_loop(dataframe):
         identifiers.append([DOI,ISSN,source_title,article_title,times_cited])
         identifiers.append([DOI,eISSN,source_title,article_title,times_cited])
         my_bar.progress(percent_complete)
+        time.sleep(0.05)
     identifiers_df = pd.DataFrame(identifiers, columns = ['DOI','Identifier','Source Title','Article Title','Times Cited'])
     
     #merge (join) found data with JIF data
