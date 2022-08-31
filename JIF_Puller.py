@@ -126,9 +126,13 @@ def crossref_loop(dataframe):
     test_df = test_df.sort_values('Index', ascending=True)
     test_df = test_df.drop('Index', axis=1)
     st.dataframe(test_df)
+    st.markdown(get_table_download_link(test_df), unsafe_allow_html=True)
     
     #convert df to csv
-    csv = convert_df(test_df)
+    #csv = test_df.to_csv(index=False)
+    #b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    #href = f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
+    #csv = convert_df(test_df)
     
 @st.experimental_memo(suppress_st_warning=True)
 def show_download_button():
@@ -140,12 +144,22 @@ def show_download_button():
         data=csv,
         file_name='DOIs_with_JIFs.csv',
         mime='text/csv')
-
+    
+@st.experimental_memo(suppress_st_warning=True)
+def get_table_download_link(df):
+    """Generates a link allowing the data in a given panda dataframe to be downloaded
+    in:  dataframe
+    out: href string
+    """
+    csv = test_df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
+    
 with st.form("my-form", clear_on_submit=True):
     data = st.file_uploader('Upload data data.  Make sure you have columns with at least DOIs and Pub IDs, with headers that read "DOI" and "Pub Id".  The standard RES output format is acceptable',
                        key = '1',
                        help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')
-    submitted = st.form_submit_button("UPLOAD")
+    submitted = st.form_submit_button("Start the Process")
 
     if submitted and data is not None:
         st.write("UPLOADED!")
@@ -158,10 +172,13 @@ with st.form("my-form", clear_on_submit=True):
             crossref_loop(df)
             st.balloons()              
             st.success('Your Download is Ready!')
-            st.download_button(label="Download data as CSV",
-                                data=csv,
-                                file_name='DOIs_with_JIFs.csv',
-                                mime='text/csv')
+
+
+#st.markdown(get_table_download_link(df), unsafe_allow_html=True)
+            #st.download_button(label="Download data as CSV",
+            #                    data=csv,
+            #                    file_name='DOIs_with_JIFs.csv',
+            #                    mime='text/csv')
             #if csv is not None:
             #    show_download_button()
         elif data.name.lower().endswith('.xlsx'):
@@ -173,10 +190,10 @@ with st.form("my-form", clear_on_submit=True):
             crossref_loop(df)
             st.balloons()              
             st.success('Your Download is Ready!')
-            st.download_button(label="Download data as CSV",
-                                data=csv,
-                                file_name='DOIs_with_JIFs.csv',
-                                mime='text/csv')
+            #st.download_button(label="Download data as CSV",
+            #                    data=csv,
+            #                    file_name='DOIs_with_JIFs.csv',
+            #                    mime='text/csv')
             #if csv is not None:
             #    show_download_button()  
     
