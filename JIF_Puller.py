@@ -126,17 +126,6 @@ def crossref_loop(dataframe):
     st.markdown(get_table_download_link(test_df), unsafe_allow_html=True)
     
 @st.experimental_memo(suppress_st_warning=True)
-def show_download_button():
-    global csv
-    st.balloons()              
-    st.success('Your Download is Ready!')
-    st.download_button(
-        label="Download data as CSV",
-        data=csv,
-        file_name='DOIs_with_JIFs.csv',
-        mime='text/csv')
-    
-@st.experimental_memo(suppress_st_warning=True)
 def get_table_download_link(df):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
