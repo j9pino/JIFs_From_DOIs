@@ -10,9 +10,7 @@ st.title("JIFS from RES")
 headers = {'Mailto':'martindalete@ornl.gov'}
 
 identifiers = []
-spam = ''
-data = ''
-
+data = None
 csv = None
 
 counter = 0
@@ -142,7 +140,7 @@ def show_download_button():
         data=csv,
         file_name='DOIs_with_JIFs.csv',
         mime='text/csv')
-data = ''    
+  
 data = st.file_uploader('Upload data data.  Make sure you have columns with at least DOIs and Pub IDs, with headers that read "DOI" and "Pub Id".  The standard RES output format is acceptable',
                            key = '1',
                            help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')        
