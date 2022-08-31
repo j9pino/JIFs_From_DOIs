@@ -140,11 +140,36 @@ def show_download_button():
         data=csv,
         file_name='DOIs_with_JIFs.csv',
         mime='text/csv')
-  
-data = st.file_uploader('Upload data data.  Make sure you have columns with at least DOIs and Pub IDs, with headers that read "DOI" and "Pub Id".  The standard RES output format is acceptable',
-                           key = '1',
-                           help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')        
 
+with st.form("my-form", clear_on_submit=True):
+    data = st.file_uploader('Upload data data.  Make sure you have columns with at least DOIs and Pub IDs, with headers that read "DOI" and "Pub Id".  The standard RES output format is acceptable',
+                       key = '1',
+                       help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')
+    submitted = st.form_submit_button("UPLOAD")
+
+    if submitted and data is not None:
+        st.write("UPLOADED!")
+        if data.name.lower().endswith('.csv'):
+        df = pd.read_csv(data, header=[0])
+        #display dataframe of uploaded DOIs     
+        st.dataframe(df)
+        #introduce streamlit proress bar widget
+        my_bar = st.progress(0.0)
+        crossref_loop(df)
+        if csv is not None:
+            show_download_button()
+    elif data.name.lower().endswith('.xlsx'):
+        df = pd.read_excel(data, header=[0])
+        #display dataframe of uploaded DOIs     
+        st.dataframe(df)
+        #introduce streamlit proress bar widget
+        my_bar = st.progress(0.0)
+        crossref_loop(df)
+        if csv is not None:
+            show_download_button()  
+    
+        
+"""
 if data is not None:
     if data.name.lower().endswith('.csv'):
         df = pd.read_csv(data, header=[0])
@@ -163,4 +188,5 @@ if data is not None:
         my_bar = st.progress(0.0)
         crossref_loop(df)
         if csv is not None:
-            show_download_button()       
+            show_download_button()
+"""
