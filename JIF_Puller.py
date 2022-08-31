@@ -156,8 +156,7 @@ def get_table_download_link(df):
     """
     csv = test_df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
-    href = f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
-    st.write(href)
+    return f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
     
 with st.form("my-form", clear_on_submit=True):
     data = st.file_uploader('Upload data data.  Make sure you have columns with at least DOIs and Pub IDs, with headers that read "DOI" and "Pub Id".  The standard RES output format is acceptable',
