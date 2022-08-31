@@ -21,7 +21,6 @@ IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main
 #convert dataframe to csv for exporting purposes
 @st.experimental_memo(suppress_st_warning=True)
 def convert_df(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv(index=False).encode('utf-8')
 
 #main function that uses list of DOIs with API call
@@ -36,12 +35,10 @@ def crossref_loop(dataframe):
             pub_id = df.iloc[i]['Pub Id']
         except:
             pub_id = 'No Pub Id Found'
-        #st.write(DOI)
         r = requests.get('https://api.crossref.org/works/'+DOI+'?mailto=martindalete@ornl.gov')        
         rText = r.text
         try:
             crossref_payload = json.loads(rText)        
-            #crossref_payload = crossref_commons.retrieval.get_publication_as_json(str(DOI))
         except:
             ids = 'No ISSN(s) Found'
             ISSN = 'No ISSN Found'
@@ -120,7 +117,6 @@ def crossref_loop(dataframe):
     df_final_2 = df_final_2.drop_duplicates()
     test_df = df_final_2.sort_values('Journal Impact Factor', ascending=False)
     test_df = test_df.drop_duplicates(['Pub Id'])
-    #test_df = test_df[~test_df.duplicated('DOI')]
     test_df['Journal Impact Factor'] = test_df['Journal Impact Factor'].astype(str)
     test_df['Journal Impact Factor'] = test_df['Journal Impact Factor'].replace('nan', 'No JIF Found')
     test_df = test_df.reset_index(drop=True)
@@ -128,12 +124,6 @@ def crossref_loop(dataframe):
     test_df = test_df.drop('Index', axis=1)
     st.dataframe(test_df)
     st.markdown(get_table_download_link(test_df), unsafe_allow_html=True)
-    
-    #convert df to csv
-    #csv = test_df.to_csv(index=False)
-    #b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
-    #href = f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
-    #csv = convert_df(test_df)
     
 @st.experimental_memo(suppress_st_warning=True)
 def show_download_button():
@@ -148,10 +138,6 @@ def show_download_button():
     
 @st.experimental_memo(suppress_st_warning=True)
 def get_table_download_link(df):
-    """Generates a link allowing the data in a given panda dataframe to be downloaded
-    in:  dataframe
-    out: href string
-    """
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
     return f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
@@ -174,14 +160,6 @@ with st.form("my-form", clear_on_submit=True):
             st.balloons()              
             st.success('Your Download is Ready!')
 
-
-#st.markdown(get_table_download_link(df), unsafe_allow_html=True)
-            #st.download_button(label="Download data as CSV",
-            #                    data=csv,
-            #                    file_name='DOIs_with_JIFs.csv',
-            #                    mime='text/csv')
-            #if csv is not None:
-            #    show_download_button()
         elif data.name.lower().endswith('.xlsx'):
             df = pd.read_excel(data, header=[0])
             #display dataframe of uploaded DOIs     
@@ -191,32 +169,3 @@ with st.form("my-form", clear_on_submit=True):
             crossref_loop(df)
             st.balloons()              
             st.success('Your Download is Ready!')
-            #st.download_button(label="Download data as CSV",
-            #                    data=csv,
-            #                    file_name='DOIs_with_JIFs.csv',
-            #                    mime='text/csv')
-            #if csv is not None:
-            #    show_download_button()  
-    
-        
-"""
-if data is not None:
-    if data.name.lower().endswith('.csv'):
-        df = pd.read_csv(data, header=[0])
-        #display dataframe of uploaded DOIs     
-        st.dataframe(df)
-        #introduce streamlit proress bar widget
-        my_bar = st.progress(0.0)
-        crossref_loop(df)
-        if csv is not None:
-            show_download_button()
-    elif data.name.lower().endswith('.xlsx'):
-        df = pd.read_excel(data, header=[0])
-        #display dataframe of uploaded DOIs     
-        st.dataframe(df)
-        #introduce streamlit proress bar widget
-        my_bar = st.progress(0.0)
-        crossref_loop(df)
-        if csv is not None:
-            show_download_button()
-"""
