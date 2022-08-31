@@ -26,6 +26,7 @@ def convert_df(df):
 #main function that uses list of DOIs with API call
 @st.experimental_memo(suppress_st_warning=True)
 def crossref_loop(dataframe):
+    global test_df
     global csv
     global counter
     for i in range(len(df)):
@@ -147,6 +148,7 @@ def show_download_button():
     
 @st.experimental_memo(suppress_st_warning=True)
 def get_table_download_link(df):
+    global test_df
     """Generates a link allowing the data in a given panda dataframe to be downloaded
     in:  dataframe
     out: href string
@@ -162,7 +164,7 @@ with st.form("my-form", clear_on_submit=True):
     submitted = st.form_submit_button("Start the Process")
 
     if submitted and data is not None:
-        st.write("UPLOADED!")
+        st.write("Your Data:")
         if data.name.lower().endswith('.csv'):
             df = pd.read_csv(data, header=[0])
             #display dataframe of uploaded DOIs     
