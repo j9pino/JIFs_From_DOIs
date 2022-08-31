@@ -4,8 +4,8 @@ import requests
 import json
 
 st.experimental_memo.clear()
-st.set_page_config(page_title="JIFs from DOIs")
-st.title("JIFS from DOIs")
+st.set_page_config(page_title="JIFs from RES")
+st.title("JIFS from RES")
 
 headers = {'Mailto':'martindalete@ornl.gov'}
 
@@ -142,8 +142,8 @@ def show_download_button():
         data=csv,
         file_name='DOIs_with_JIFs.csv',
         mime='text/csv')
-    
-data = st.file_uploader('Upload your data.  Make sure your column with DOIs has a column header that is "DOI"',
+data = ''    
+data = st.file_uploader('Upload data data.  Make sure you have columns with at least DOIs and Pub IDs, with headers that read "DOI" and "Pub Id".  The standard RES output format is acceptable',
                            key = '1',
                            help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')        
 
