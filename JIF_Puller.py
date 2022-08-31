@@ -150,23 +150,23 @@ with st.form("my-form", clear_on_submit=True):
     if submitted and data is not None:
         st.write("UPLOADED!")
         if data.name.lower().endswith('.csv'):
-        df = pd.read_csv(data, header=[0])
-        #display dataframe of uploaded DOIs     
-        st.dataframe(df)
-        #introduce streamlit proress bar widget
-        my_bar = st.progress(0.0)
-        crossref_loop(df)
-        if csv is not None:
-            show_download_button()
-    elif data.name.lower().endswith('.xlsx'):
-        df = pd.read_excel(data, header=[0])
-        #display dataframe of uploaded DOIs     
-        st.dataframe(df)
-        #introduce streamlit proress bar widget
-        my_bar = st.progress(0.0)
-        crossref_loop(df)
-        if csv is not None:
-            show_download_button()  
+            df = pd.read_csv(data, header=[0])
+            #display dataframe of uploaded DOIs     
+            st.dataframe(df)
+            #introduce streamlit proress bar widget
+            my_bar = st.progress(0.0)
+            crossref_loop(df)
+            if csv is not None:
+                show_download_button()
+        elif data.name.lower().endswith('.xlsx'):
+            df = pd.read_excel(data, header=[0])
+            #display dataframe of uploaded DOIs     
+            st.dataframe(df)
+            #introduce streamlit proress bar widget
+            my_bar = st.progress(0.0)
+            crossref_loop(df)
+            if csv is not None:
+                show_download_button()  
     
         
 """
