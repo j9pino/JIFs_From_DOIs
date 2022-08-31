@@ -27,7 +27,6 @@ def convert_df(df):
 #main function that uses list of DOIs with API call
 @st.experimental_memo(suppress_st_warning=True)
 def crossref_loop(dataframe):
-    global test_df
     global csv
     global counter
     for i in range(len(df)):
@@ -149,12 +148,11 @@ def show_download_button():
     
 @st.experimental_memo(suppress_st_warning=True)
 def get_table_download_link(df):
-    global test_df
     """Generates a link allowing the data in a given panda dataframe to be downloaded
     in:  dataframe
     out: href string
     """
-    csv = test_df.to_csv(index=False)
+    csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
     return f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
     
