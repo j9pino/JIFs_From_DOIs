@@ -143,38 +143,26 @@ def show_download_button():
         file_name='DOIs_with_JIFs.csv',
         mime='text/csv')
     
-#streamlit upload button
-@st.experimental_memo(suppress_st_warning=True)
-def show_upload_button():
-    global data
-    with st.form("my-form", clear_on_submit=True):
-        data = st.file_uploader('Upload your data.  Make sure your column with DOIs has a column header that is "DOI"',
+data = st.file_uploader('Upload your data.  Make sure your column with DOIs has a column header that is "DOI"',
                            key = '1',
-                           help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')
-        submitted = st.form_submit_button("Begin Search!")
+                           help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')        
 
-def check_data():
-    global my_bar
-    global df
-    if data is not None:
-        if data.name.lower().endswith('.csv'):
-            df = pd.read_csv(data, header=[0])
-            #display dataframe of uploaded DOIs     
-            st.dataframe(df)
-            #introduce streamlit proress bar widget
-            my_bar = st.progress(0.0)
-            crossref_loop(df)
-            if csv is not None:
-                show_download_button()
-        elif data.name.lower().endswith('.xlsx'):
-            df = pd.read_excel(data, header=[0])
-            #display dataframe of uploaded DOIs     
-            st.dataframe(df)
-            #introduce streamlit proress bar widget
-            my_bar = st.progress(0.0)
-            crossref_loop(df)
-            if csv is not None:
-                show_download_button()
-        
-show_upload_button()
-check_data()       
+if data is not None:
+    if data.name.lower().endswith('.csv'):
+        df = pd.read_csv(data, header=[0])
+        #display dataframe of uploaded DOIs     
+        st.dataframe(df)
+        #introduce streamlit proress bar widget
+        my_bar = st.progress(0.0)
+        crossref_loop(df)
+        if csv is not None:
+            show_download_button()
+    elif data.name.lower().endswith('.xlsx'):
+        df = pd.read_excel(data, header=[0])
+        #display dataframe of uploaded DOIs     
+        st.dataframe(df)
+        #introduce streamlit proress bar widget
+        my_bar = st.progress(0.0)
+        crossref_loop(df)
+        if csv is not None:
+            show_download_button()       
