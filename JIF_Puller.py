@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import requests
 import json
+import base64
 
 st.experimental_memo.clear()
 st.set_page_config(page_title="JIFs from RES")
