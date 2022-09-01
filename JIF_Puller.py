@@ -30,7 +30,22 @@ def crossref_loop(dataframe):
     global counter
     for i in range(len(df)):
         percent_complete = (i+1)/len(df)
-        DOI = str(df.iloc[i]['DOI'].replace(' ',''))
+        try:
+            DOI = str(df.iloc[i]['DOI'].replace(' ',''))
+        except:
+            DOI = ''
+            pub_id = df.iloc[i]['Pub Id']
+            ids = 'No ISSN(s) Found'
+            ISSN = 'No ISSN Found'
+            eISSN = 'No ISSN Found'
+            article_title = 'No Article Title Found'
+            times_cited = 0
+            source_title = 'No Source Title Found'
+            identifiers.append([counter,pub_id,DOI,ISSN,source_title,article_title,times_cited])
+            identifiers.append([counter,pub_id,DOI,eISSN,source_title,article_title,times_cited])
+            counter += 1
+            my_bar.progress(percent_complete)
+            continue
         try:
             pub_id = df.iloc[i]['Pub Id']
         except:
