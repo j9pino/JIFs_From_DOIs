@@ -1,3 +1,3 @@
 # JIFs_From_DOIs
 
-Given a list of DOIs (submitted as CSV with one DOI per row and no column header), return associated Journal Impact Factor for each document.  
+Given a list of publications exported from RESolution, return the associated Journal Impact Factor for each document.  
