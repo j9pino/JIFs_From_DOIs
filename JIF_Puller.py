@@ -137,18 +137,16 @@ def crossref_loop(dataframe):
     test_df = test_df.reset_index(drop=True)
     test_df = test_df.sort_values('Index', ascending=True)
     test_df = test_df.drop('Index', axis=1)
-    st.dataframe(test_df)
-    st.markdown(get_table_download_link(test_df), unsafe_allow_html=True)
     spam = df[pd.to_numeric(df['Journal Impact Factor'], errors='coerce').notnull()]
     count_all_pubs = str(len(df))
     count_jif_pubs = str(len(spam))
-    percent_jif_pubs = str((len(spam)/len(df))*100)[:4]
+    percent_jif_pubs = str(round((len(spam)/len(df))*100))
     avg_jif = str(round(spam['Journal Impact Factor'].astype(float).mean(),2))
     median_jif = str(spam['Journal Impact Factor'].astype(float).median())
     jifs_over_5 = str(spam[spam['Journal Impact Factor'].astype(float) > 5].shape[0])
-    percent_over_5 = str(((spam[spam['Journal Impact Factor'].astype(float) > 5].shape[0])/float(count_jif_pubs))*100)[:4]
+    percent_over_5 = str(round(((spam[spam['Journal Impact Factor'].astype(float) > 5].shape[0])/float(count_jif_pubs))*100))
     jifs_over_10 = str(spam[spam['Journal Impact Factor'].astype(float) > 10].shape[0])
-    percent_over_10 = str(((spam[spam['Journal Impact Factor'].astype(float) > 10].shape[0])/float(count_jif_pubs))*100)[:4]
+    percent_over_10 = str(round(((spam[spam['Journal Impact Factor'].astype(float) > 10].shape[0])/float(count_jif_pubs))*100))
     st.write('Total Number of RES Pubs Submitted: ' + count_all_pubs)
     st.write('Total Number of RES Pubs with JIF: ' + count_jif_pubs)
     st.write('Percentage of RES Pubs with JIF: ' + percent_jif_pubs + '%')
@@ -157,7 +155,10 @@ def crossref_loop(dataframe):
     st.write('Number of JIFs > 5: ' + jifs_over_5)
     st.write('Percentage of RES Pubs with JIF > 5: ' + percent_over_5 + '%')
     st.write('Number of JIFs > 10: ' + jifs_over_10)
-    st.write('Percentage of RES Pubs with JIF > 10: ' + percent_over_10 + '%')
+    st.write('Percentage of RES Pubs with JIF > 10: ' + percent_over_10 + '%')    
+    st.dataframe(test_df)
+    st.markdown(get_table_download_link(test_df), unsafe_allow_html=True)
+
     
 @st.experimental_memo(suppress_st_warning=True)
 def get_table_download_link(df):
