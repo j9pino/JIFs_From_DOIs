@@ -137,10 +137,10 @@ def crossref_loop(dataframe):
     test_df = test_df.reset_index(drop=True)
     test_df = test_df.sort_values('Index', ascending=True)
     test_df = test_df.drop('Index', axis=1)
-    spam = df[pd.to_numeric(df['Journal Impact Factor'], errors='coerce').notnull()]
-    count_all_pubs = str(len(df))
+    spam = df[pd.to_numeric(test_df['Journal Impact Factor'], errors='coerce').notnull()]
+    count_all_pubs = str(len(test_df))
     count_jif_pubs = str(len(spam))
-    percent_jif_pubs = str(round((len(spam)/len(df))*100))
+    percent_jif_pubs = str(round((len(spam)/len(test_df))*100))
     avg_jif = str(round(spam['Journal Impact Factor'].astype(float).mean(),2))
     median_jif = str(spam['Journal Impact Factor'].astype(float).median())
     jifs_over_5 = str(spam[spam['Journal Impact Factor'].astype(float) > 5].shape[0])
