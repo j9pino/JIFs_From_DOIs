@@ -180,7 +180,7 @@ with st.form("my-form", clear_on_submit=True):
             st.dataframe(df)
             #check for Pub Id column
             check = list(df.columns)
-            if 'Pub Id' not in spam:
+            if 'Pub Id' not in check:
                 df['Pub Id'] = range(1, len(df.index)+1)
             #introduce streamlit proress bar widget
             my_bar = st.progress(0.0)
@@ -194,7 +194,7 @@ with st.form("my-form", clear_on_submit=True):
             st.dataframe(df)
             #check for Pub Id column
             check = list(df.columns)
-            if 'Pub Id' not in spam:
+            if 'Pub Id' not in check:
                 df['Pub Id'] = range(1, len(df.index)+1)
             #introduce streamlit proress bar widget
             my_bar = st.progress(0.0)
