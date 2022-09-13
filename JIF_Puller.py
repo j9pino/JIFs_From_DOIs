@@ -6,7 +6,7 @@ import base64
 
 st.experimental_memo.clear()
 st.set_page_config(page_title="JIFs from RES")
-st.title("JIFS from RES")
+st.title("JIFs from RES")
 
 headers = {'Mailto':'martindalete@ornl.gov'}
 
