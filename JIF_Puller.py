@@ -167,7 +167,7 @@ def get_table_download_link(df):
     return f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
     
 with st.form("my-form", clear_on_submit=True):
-    data = st.file_uploader('Upload data data.  Make sure you have columns with at least DOIs and Pub IDs, with headers that read "DOI" and "Pub Id".  The standard RES output format is acceptable',
+    data = st.file_uploader('Upload data data.  Your data upload must AT LEAST contain a column of DOIs with a column header of "DOI".  The standard RES output format is acceptable.')
                        key = '1',
                        help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')
     submitted = st.form_submit_button("Start the Process")
@@ -178,6 +178,10 @@ with st.form("my-form", clear_on_submit=True):
             df = pd.read_csv(data, header=[0])
             #display dataframe of uploaded DOIs     
             st.dataframe(df)
+            #check for Pub Id column
+            check = list(df.columns)
+            if 'Pub Id' not in spam:
+                df['Pub Id'] = range(1, len(df.index)+1)
             #introduce streamlit proress bar widget
             my_bar = st.progress(0.0)
             crossref_loop(df)
@@ -188,6 +192,10 @@ with st.form("my-form", clear_on_submit=True):
             df = pd.read_excel(data, header=[0])
             #display dataframe of uploaded DOIs     
             st.dataframe(df)
+            #check for Pub Id column
+            check = list(df.columns)
+            if 'Pub Id' not in spam:
+                df['Pub Id'] = range(1, len(df.index)+1)
             #introduce streamlit proress bar widget
             my_bar = st.progress(0.0)
             crossref_loop(df)
