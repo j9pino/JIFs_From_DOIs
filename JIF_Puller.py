@@ -167,7 +167,7 @@ def get_table_download_link(df):
     return f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
     
 with st.form("my-form", clear_on_submit=True):
-    data = st.file_uploader('Upload data data.  Your data upload must AT LEAST contain a column of DOIs with a column header of "DOI".  The standard RES output format is acceptable.')
+    data = st.file_uploader('Upload data data.  Your data upload must AT LEAST contain a column of DOIs with a column header of "DOI".  The standard RES output format is acceptable.',
                        key = '1',
                        help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')
     submitted = st.form_submit_button("Start the Process")
