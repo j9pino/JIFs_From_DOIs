@@ -19,12 +19,12 @@ counter = 0
 IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs_2022-08-26.csv?raw=true")
 
 #convert dataframe to csv for exporting purposes
-@st.experimental_memo(suppress_st_warning=True)
+@st.cache_data(suppress_st_warning=True)
 def convert_df(df):
     return df.to_csv(index=False).encode('utf-8')
 
 #main function that uses list of DOIs with API call
-@st.experimental_memo(suppress_st_warning=True)
+@st.cache_data(suppress_st_warning=True)
 def crossref_loop(dataframe):
     global csv
     global counter
@@ -160,7 +160,7 @@ def crossref_loop(dataframe):
     st.markdown(get_table_download_link(test_df), unsafe_allow_html=True)
 
     
-@st.experimental_memo(suppress_st_warning=True)
+@st.cache_data(suppress_st_warning=True)
 def get_table_download_link(df):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
