@@ -4,7 +4,7 @@ import requests
 import json
 import base64
 
-st.experimental_memo.clear()
+st.cache_data.clear()
 st.set_page_config(page_title="JIFs from RES")
 st.title("JIFs from RES")
 
