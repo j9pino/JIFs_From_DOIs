@@ -8,7 +8,7 @@ st.cache_data.clear()
 st.set_page_config(page_title="JIFs from RES")
 st.title("JIFs from RES")
 
-headers = {'Mailto':'martindalete@ornl.gov'}
+headers = {'Mailto':'pinojc@ornl.gov'}
 
 identifiers = []
 data = None
@@ -50,7 +50,7 @@ def crossref_loop(dataframe):
             pub_id = df.iloc[i]['Pub Id']
         except:
             pub_id = 'No Pub Id Found'
-        r = requests.get('https://api.crossref.org/works/'+DOI+'?mailto=martindalete@ornl.gov')        
+        r = requests.get('https://api.crossref.org/works/'+DOI+'?mailto=pinojc@ornl.gov')        
         rText = r.text
         try:
             crossref_payload = json.loads(rText)        
