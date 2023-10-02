@@ -18,7 +18,7 @@ counter = 0
 
 # Updated raw file link for j9pino GitHub account
 # This is the old link - IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs_2022-08-26.csv?raw=true")
-IFs = pd.read_csv(r"https://raw.githubusercontent.com/j9pino/JIFs_From_DOIs/main/Incites_Publishers_2022.csv")
+IFs = pd.read_csv(r"https://raw.githubusercontent.com/j9pino/JIFs_From_DOIs/main/Incites_Publishers_2023.csv")
 
 #convert dataframe to csv for exporting purposes
 @st.cache_data()
