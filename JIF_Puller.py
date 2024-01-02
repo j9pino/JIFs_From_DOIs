@@ -27,12 +27,15 @@ def get_jif_and_citations(DOI, IFs):
     except json.JSONDecodeError:
         return 'No JIF Found', 0
 
-def process_data(dataframe, IFs):
+def process_data(dataframe, IFs, progress_bar):
     jif_times_cited = []
+    total = len(dataframe)
     for i, row in dataframe.iterrows():
         DOI = str(row.get('DOI', '')).replace(' ', '')
         jif, times_cited = get_jif_and_citations(DOI, IFs)
         jif_times_cited.append([DOI, jif, times_cited])
+
+        progress_bar.progress((i + 1) / total)
 
     jif_times_cited_df = pd.DataFrame(jif_times_cited, columns=['DOI', 'Journal Impact Factor', 'Times Cited'])
     merged_df = pd.merge(dataframe, jif_times_cited_df, on='DOI', how='left')
@@ -59,10 +62,7 @@ with st.form("my-form", clear_on_submit=True):
         st.dataframe(df)
 
         my_bar = st.progress(0.0)
-        for i, _ in enumerate(df.iterrows(), 1):
-            my_bar.progress(i / len(df))
-        
-        updated_df = process_data(df, IFs)
+        updated_df = process_data(df, IFs, my_bar)
 
         st.dataframe(updated_df)
         st.markdown(get_table_download_link(updated_df), unsafe_allow_html=True)
