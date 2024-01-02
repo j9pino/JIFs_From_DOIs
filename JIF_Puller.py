@@ -17,7 +17,6 @@ csv = None
 counter = 0
 
 # Updated raw file link for j9pino GitHub account
-# This is the old link - IFs = pd.read_csv(r"https://raw.githubusercontent.com/martindalete/JIF_Tool/main/JIFs_2022-08-26.csv?raw=true")
 IFs = pd.read_csv(r"https://raw.githubusercontent.com/j9pino/JIFs_From_DOIs/main/Incites_Publishers_2023.csv")
 
 #convert dataframe to csv for exporting purposes
@@ -169,9 +168,8 @@ def get_table_download_link(df):
     return f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
     
 with st.form("my-form", clear_on_submit=True):
-    data = st.file_uploader('Upload data data.  Your data upload must AT LEAST contain a column of DOIs with a column header of "DOI".  The standard RES output format is acceptable.',
-                       key = '1',
-                       help='This widget accepts both CSV and XLSX files. The standard RES output format is acceptable.')
+    data = st.file_uploader('Upload your file in CSV or Excel format. Please make sure there is a column labeled "DOI" to help the API correctly identify each publication. If the application times out, your file may be too large for the API to run all at once. Please split the file in half and try again.',
+                       key = '1')
     submitted = st.form_submit_button("Start the Process")
 
     if submitted and data is not None:
