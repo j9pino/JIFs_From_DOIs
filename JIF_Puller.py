@@ -9,7 +9,7 @@ st.title("JIFs from RES")
 
 headers = {'Mailto':'pinojc@ornl.gov'}
 
-IFs = pd.read_csv(r"https://raw.githubusercontent.com/j9pino/JIFs_From_DOIs/main/Incites_Publishers_2023.csv")
+IFs = pd.read_csv(r"https://raw.githubusercontent.com/j9pino/JIFs_From_DOIs/main/Incites_Publishers_2024.csv")
 
 def get_jif_and_citations(DOI, IFs):
     try:
