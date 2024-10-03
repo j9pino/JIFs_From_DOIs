@@ -3,6 +3,7 @@ import streamlit as st
 import requests
 import json
 import base64
+import numpy as np
 
 st.set_page_config(page_title="JIFs from RES")
 st.title("JIFs from RES")
@@ -21,11 +22,11 @@ def get_jif_and_citations(DOI, IFs):
         eISSN = ids[1] if len(ids) > 1 else 'No ISSN Found'
 
         jif_row = IFs[(IFs['ISSN'] == ISSN) | (IFs['eISSN'] == eISSN)]
-        jif = jif_row['Journal Impact Factor'].iloc[0] if not jif_row.empty else 'No JIF Found'
+        jif = jif_row['Journal Impact Factor'].iloc[0] if not jif_row.empty else np.nan
 
         return jif, times_cited
     except json.JSONDecodeError:
-        return 'No JIF Found', 0
+        return np.nan, 0
 
 def process_data(dataframe, IFs, progress_bar):
     jif_times_cited = []
@@ -59,6 +60,31 @@ def get_table_download_link(df):
     b64 = base64.b64encode(csv.encode()).decode()
     return f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
 
+def display_summary(dataframe):
+    total_pubs = len(dataframe)
+    pubs_with_jif = dataframe['Journal Impact Factor'].notna().sum()
+    avg_jif = dataframe['Journal Impact Factor'].mean()
+    median_jif = dataframe['Journal Impact Factor'].median()
+    jif_above_5 = dataframe[dataframe['Journal Impact Factor'] > 5]['Journal Impact Factor'].count()
+    jif_above_10 = dataframe[dataframe['Journal Impact Factor'] > 10]['Journal Impact Factor'].count()
+
+    # Calculate percentages
+    pct_with_jif = (pubs_with_jif / total_pubs) * 100
+    pct_above_5 = (jif_above_5 / total_pubs) * 100
+    pct_above_10 = (jif_above_10 / total_pubs) * 100
+
+    # Display summary in Streamlit
+    st.subheader("Summary of Results")
+    st.write(f"Total number of publications submitted: {total_pubs}")
+    st.write(f"Total number of publications with JIF: {pubs_with_jif}")
+    st.write(f"Percentage of publications with JIF: {pct_with_jif:.2f}%")
+    st.write(f"Average JIF for publications with JIF: {avg_jif:.2f}")
+    st.write(f"Median JIF for publications with JIF: {median_jif:.2f}")
+    st.write(f"Number of JIFs > 5: {jif_above_5}")
+    st.write(f"Percentage of publications with JIF > 5: {pct_above_5:.2f}%")
+    st.write(f"Number of JIFs > 10: {jif_above_10}")
+    st.write(f"Percentage of publications with JIF > 10: {pct_above_10:.2f}%")
+
 with st.form("my-form", clear_on_submit=True):
     data = st.file_uploader('Upload your file in CSV or Excel format. Please make sure there is a column labeled "DOI" to help the API correctly identify each publication.', key='1')
     submitted = st.form_submit_button("Start the Process")
@@ -77,7 +103,14 @@ with st.form("my-form", clear_on_submit=True):
         my_bar = st.progress(0.0)
         updated_df = process_data(df, IFs, my_bar)
 
+        # Display the processed data
         st.dataframe(updated_df)
+
+        # Display the summary of the results
+        display_summary(updated_df)
+
+        # Display the download link at the bottom
         st.markdown(get_table_download_link(updated_df), unsafe_allow_html=True)
+
         st.balloons()              
         st.success('Your Download is Ready!')
