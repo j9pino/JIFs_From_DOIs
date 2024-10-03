@@ -30,15 +30,28 @@ def get_jif_and_citations(DOI, IFs):
 def process_data(dataframe, IFs, progress_bar):
     jif_times_cited = []
     total = len(dataframe)
+
+    # Normalize column names
+    dataframe.columns = map(str.lower, dataframe.columns)
+    
+    # Check if DOI or Doi exists
+    doi_column = 'doi' if 'doi' in dataframe.columns else None
+    if not doi_column:
+        st.error("DOI column not found!")
+        return dataframe  # Return the original dataframe if no DOI column exists
+
     for i, row in dataframe.iterrows():
-        DOI = str(row.get('DOI', '')).replace(' ', '')
+        DOI = str(row.get(doi_column, '')).replace(' ', '')
         jif, times_cited = get_jif_and_citations(DOI, IFs)
         jif_times_cited.append([DOI, jif, times_cited])
 
         progress_bar.progress((i + 1) / total)
 
-    jif_times_cited_df = pd.DataFrame(jif_times_cited, columns=['DOI', 'Journal Impact Factor', 'Times Cited'])
-    merged_df = pd.merge(dataframe, jif_times_cited_df, on='DOI', how='left')
+    # Create jif_times_cited_df with a lowercase 'doi' column
+    jif_times_cited_df = pd.DataFrame(jif_times_cited, columns=[doi_column, 'Journal Impact Factor', 'Times Cited'])
+    
+    # Merge based on the lowercase 'doi' column
+    merged_df = pd.merge(dataframe, jif_times_cited_df, on=doi_column, how='left')
     return merged_df
 
 def get_table_download_link(df):
