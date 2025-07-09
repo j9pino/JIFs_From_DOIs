@@ -11,7 +11,7 @@ st.title("JIFs from RES")
 headers = {'Mailto': 'pinojc@ornl.gov'}
 
 # Load JIF data from a local file in the working directory
-IFs = pd.read_csv("Incites_Publishers_2024.csv")
+IFs = pd.read_csv("Incites_Publishers_2025.csv")
 
 # Clean up IFs columns for better matching
 IFs['ISSN'] = IFs['ISSN'].astype(str).str.strip()
