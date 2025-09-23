@@ -93,31 +93,51 @@ def get_table_download_link(df):
     b64 = base64.b64encode(csv.encode()).decode()
     return f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
 
-# Function to display a summary of the results
 def display_summary(dataframe):
-    total_pubs = len(dataframe)
-    pubs_with_jif = dataframe['Journal Impact Factor'].notna().sum()
-    avg_jif = dataframe['Journal Impact Factor'].mean()
-    median_jif = dataframe['Journal Impact Factor'].median()
-    jif_above_5 = dataframe[dataframe['Journal Impact Factor'] > 5]['Journal Impact Factor'].count()
-    jif_above_10 = dataframe[dataframe['Journal Impact Factor'] > 10]['Journal Impact Factor'].count()
+    dataframe.columns = map(str.lower, dataframe.columns)
+    doi_column = 'doi'
+    jif_column = 'journal impact factor'
 
-    # Calculate percentages
-    pct_with_jif = (pubs_with_jif / total_pubs) * 100
-    pct_above_5 = (jif_above_5 / total_pubs) * 100
-    pct_above_10 = (jif_above_10 / total_pubs) * 100
+    if doi_column not in dataframe.columns or jif_column not in dataframe.columns:
+        st.warning("Required columns for summary not found.")
+        return
 
-    # Display summary in Streamlit
+    total_rows = len(dataframe)
+
+    # Exclude blank DOIs from duplicate count
+    non_blank_dois = dataframe[doi_column].dropna().astype(str).str.strip()
+    duplicate_doi_count = non_blank_dois[non_blank_dois.duplicated()].nunique()
+
+    # Filter out rows with blank DOIs, then drop duplicates for summary
+    filtered_df = dataframe[dataframe[doi_column].notna() & (dataframe[doi_column].astype(str).str.strip() != "")]
+    unique_df = filtered_df.drop_duplicates(subset=[doi_column])
+    total_pubs = len(unique_df)
+
+    pubs_with_jif = unique_df[jif_column].notna().sum()
+    avg_jif = unique_df[jif_column].mean()
+    median_jif = unique_df[jif_column].median()
+    jif_above_5 = unique_df[unique_df[jif_column] > 5][jif_column].count()
+    jif_above_10 = unique_df[unique_df[jif_column] > 10][jif_column].count()
+
+    pct_with_jif = (pubs_with_jif / total_pubs) * 100 if total_pubs else 0
+    pct_above_5 = (jif_above_5 / total_pubs) * 100 if total_pubs else 0
+    pct_above_10 = (jif_above_10 / total_pubs) * 100 if total_pubs else 0
+
     st.subheader("Summary of Results")
-    st.write(f"Total number of publications submitted: {total_pubs}")
-    st.write(f"Total number of publications with JIF: {pubs_with_jif}")
-    st.write(f"Percentage of publications with JIF: {pct_with_jif:.2f}%")
-    st.write(f"Average JIF for publications with JIF: {avg_jif:.2f}")
-    st.write(f"Median JIF for publications with JIF: {median_jif:.2f}")
-    st.write(f"Number of JIFs > 5: {jif_above_5}")
-    st.write(f"Percentage of publications with JIF > 5: {pct_above_5:.2f}%")
-    st.write(f"Number of JIFs > 10: {jif_above_10}")
-    st.write(f"Percentage of publications with JIF > 10: {pct_above_10:.2f}%")
+
+    st.markdown(f"""
+**File overview**
+- Rows in uploaded file: **{total_rows}**
+- Unique DOIs analyzed: **{total_pubs}**
+- ⚠️ *Note: Rows with the same DOI may differ in other fields (e.g. Pub Id, Journal Name, etc.).*
+
+**JIF statistics**
+- Publications with JIF: **{pubs_with_jif}** ({pct_with_jif:.2f}%)
+- Average JIF: **{avg_jif:.2f}**
+- Median JIF: **{median_jif:.2f}**
+- JIFs > 5: **{jif_above_5}** ({pct_above_5:.2f}%)
+- JIFs > 10: **{jif_above_10}** ({pct_above_10:.2f}%)
+""")
 
 # Main Streamlit form
 with st.form("my-form", clear_on_submit=True):
